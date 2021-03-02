@@ -17,9 +17,11 @@ const Form = ({ currentId, setCurrentId }) => {
     tags: '',
     selectedFile: '',
   });
+
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
+  // console.log(post);
   const dispatch = useDispatch();
 
   useEffect(() => {
