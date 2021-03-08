@@ -11,7 +11,11 @@ export const getPosts = async (req, res) => {
 };
 export const createPost = async (req, res) => {
   const post = req.body;
-  const newPost = new Post(post);
+  const newPost = new Post({
+    ...post,
+    creatore: req.userId,
+    createdAt: new Date().toISOString(),
+  });
   try {
     await newPost.save();
     res.status(201).json(newPost);
@@ -37,16 +41,21 @@ export const deletePost = async (req, res) => {
 };
 export const likePost = async (req, res) => {
   const { id } = req.params;
+  if (!req.userId) {
+    return res.json({ message: 'unauthorized' });
+  }
   // console.log(id);
   const post = await Post.findById(id);
+  const index = post.likes.findIndex((id) => id === String(req.userId));
+  if (index === -1) {
+    // like
+    post.likes.push(req.userId);
+  } else {
+    // dislike
+    post.likes = post.likes.filter((id) => id !== String.req.userId);
+  }
   // console.log(post);
   if (!post) return res.status(404).send('No post found');
-  const updatedPost = await Post.findByIdAndUpdate(
-    id,
-    {
-      likeCount: post.likeCount + 1,
-    },
-    { new: true }
-  );
+  const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true });
   res.json(updatedPost);
 };

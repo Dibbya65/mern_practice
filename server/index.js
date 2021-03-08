@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 import postRoutes from './routes/posts.js';
+import userRoutes from './routes/user.js';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 
 // init route
 app.use('/posts', postRoutes);
+app.use('/user', userRoutes);
 
 // mongodb
 const CONNECTION_URL = 'mongodb://127.0.0.1:27017/mern';
